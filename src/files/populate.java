@@ -26,10 +26,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static jdk.nashorn.internal.objects.NativeArray.map;
@@ -116,11 +113,11 @@ public class populate {
 //	                        
 	                        String thiskey = days[j].toString();
 	                        String q3 = "insert into yelp_checkin values ('"+obj.get("business_id")+"','"+obj.get("type")+"','"+thiskey+"','"+checkin_info.get(thiskey)+"')";
-//	                        
+//
 	                         statement.executeUpdate(q3);
 	                        
 	                     }
-						
+						statement.close();
 						
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
@@ -172,7 +169,7 @@ public class populate {
 						System.out.println(query); 
 						Statement statement = connection.createStatement();
 	                    statement.executeUpdate(query);
-						
+						statement.close();
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -232,7 +229,9 @@ public class populate {
                             System.out.println(q3);
                              statement.executeUpdate(q3);
                          }
-                } catch (ParseException ex) {
+                statement.close();
+                }
+                catch (ParseException ex) {
                     Logger.getLogger(populate.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
                     Logger.getLogger(populate.class.getName()).log(Level.SEVERE, null, ex);
@@ -281,6 +280,7 @@ public class populate {
 					//insertion into business table
 					String query = "insert into yelp_business values ('"+obj.get("business_id")+"','"+add+"','"+obj.get("open")+"','"+obj.get("city")+"','"+obj.get("state")+"','"+obj.get("latitude")+"','"+obj.get("longitude")+"','"+obj.get("review_count")+"','"+obj.get("name")+"','"+obj.get("stars")+"','"+obj.get("type")+"')";
 					Statement statement = connection.createStatement();
+
 					System.out.println(query);
 					statement.executeUpdate(query);
 					//end
@@ -303,9 +303,18 @@ public class populate {
 	                   
 	                   //insertion into cat table
 //	                   System.out.println(s);
+                       String[] mainCategories = {"Active Life", "Arts & Entertainment", "Automotive", "Car Rental" ,"Cafes","Beauty & Spas","Convenience Stores","Dentists", "Doctors", "Drugstores","Department Stores", "Education", "Event Planning & Services", "Flowers & Gifts" ,"Food" ,"Health & Medical","Home Services","Home & Garden","Hospitals","Hotels & Travel","Hardware Stores","Grocery","Medical Centers","Nurseries & Gardening","Nightlife","Restaurants","Shopping","Transportation"};
+
+                       List<String> mainCategories1 = Arrays.asList(mainCategories);
 	                   ArrayList<String> categories = (ArrayList<String>) obj.get("categories");
 	                   for(int j = 0 ; j<categories.size() ; ++j){
-	                	   String q = "insert into business_cat values ('"+ obj.get("business_id") + "','" +categories.get(j) + "')";
+                           String q;
+                           if(mainCategories1.contains(categories.get(j))) {
+                               q = "insert into business_cat values ('" + obj.get("business_id") + "','" + categories.get(j) + "','main')";
+                           }
+                           else {
+                              q = "insert into business_cat values ('" + obj.get("business_id") + "','" + categories.get(j) + "','sub')";
+                           }
 //	                	   System.out.println(q);
                          statement.executeUpdate(q);
 	                   }
@@ -363,7 +372,7 @@ public class populate {
 //	                         statement.executeUpdate(q3);
 	                        
 	                     }
-					
+                      statement.close();
 //                   
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
@@ -374,6 +383,7 @@ public class populate {
 				}
               
               i++;
+
            }
            else{
         	   break;

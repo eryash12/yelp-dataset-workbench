@@ -57,7 +57,8 @@ foreign key (business_id) REFERENCES  yelp_business(business_id) on delete casca
 create table business_cat
 (
 business_id VARCHAR2(100) NOT NULL ,
-cat_name VARCHAR2(30) not null,
+cat_name VARCHAR2(50) not null,
+cat_type VARCHAR2(50) not null,
 foreign key (business_id) REFERENCES  yelp_business(business_id) on delete cascade
 );
 create table business_hood

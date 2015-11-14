@@ -1,3 +1,4 @@
+drop table yelp_checkin;
 drop table yelp_reviews;
 Drop table users_compliments;
 drop table users_friends;
